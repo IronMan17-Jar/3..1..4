@@ -1,7 +1,6 @@
 package web.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import web.model.Role;
 
 import javax.persistence.EntityManager;

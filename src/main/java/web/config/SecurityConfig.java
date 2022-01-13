@@ -1,7 +1,6 @@
 package web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,56 +10,50 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import web.config.handler.LoginSuccessHandler;
-import web.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
 
-    @Autowired//@Qualifier("userDetailsServiceImpl")
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, LoginSuccessHandler loginSuccessHandler) {
+    @Autowired
+    public SecurityConfig(UserDetailsService userDetailsService, LoginSuccessHandler loginSuccessHandler) {
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
     }
 
-
     @Override
-    public void configure(AuthenticationManagerBuilder auth)  {
+    public void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authenticationProvider());
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/", "/user")
-                .hasAnyRole("ADMIN, USER")
-                .antMatchers("/**")
-                .hasAnyRole("ADMIN")
-                .and()
+        http
                 .formLogin()
-                .successHandler(loginSuccessHandler)
                 .permitAll()
+                .successHandler(loginSuccessHandler)
+                .permitAll();
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                .antMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                .logout()
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login")
-                .and().csrf().disable();
+                .logout();
     }
-
-//    public PasswordEncoder passwordEncoder() {return NoOpPasswordEncoder.getInstance();}
 
     @Bean
     public PasswordEncoder passwordEncoder() {

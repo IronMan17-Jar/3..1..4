@@ -2,7 +2,6 @@ package web.model;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
@@ -33,14 +32,14 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    public User(int id, String name, String lastName, String password, int age, Set<Role> roles) {
-        this.id = id;
-        this.name = name;
-        this.lastName = lastName;
-        this.password = password;
-        this.age = age;
-        this.roles = roles;
-    }
+//    public User(int id, String name, String lastName, String password, int age, Set<Role> roles) {
+//        this.id = id;
+//        this.name = name;
+//        this.lastName = lastName;
+//        this.password = password;
+//        this.age = age;
+//        this.roles = roles;
+//    }
 
     public User(int id, int age, String name, String lastName, String password) {
         this.id = id;
@@ -51,7 +50,7 @@ public class User implements UserDetails {
 
     }
 
-    public User(){
+    public User() {
 
     }
 
@@ -111,7 +110,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return getRoles();
     }
 
     @Override

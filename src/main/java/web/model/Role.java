@@ -1,7 +1,6 @@
 package web.model;
 
 import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -28,9 +27,11 @@ public class Role implements GrantedAuthority {
     public Role() {
 
     }
+
     public Role(String role) {
         this.role = role;
     }
+
     public Role(int id) {
         this.id = id;
     }

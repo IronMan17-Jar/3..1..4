@@ -20,7 +20,6 @@ public class RoleServiceImpl implements RoleService {
         this.roleDAO = roleDAO;
     }
 
-
     @Override
     public List<Role> allRoles() {
         return roleDAO.getAllRoles();
