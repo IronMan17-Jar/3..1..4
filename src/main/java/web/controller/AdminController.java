@@ -26,7 +26,7 @@ public class AdminController {
     public String allUsers(Model model) {
         List<User> allUsers = userService.allUsers();
         model.addAttribute("users", userService.allUsers());
-        return "admin-page";
+        return "index";
     }
 
     @GetMapping("/new")
@@ -34,34 +34,34 @@ public class AdminController {
         User user = new User();
         model.addAttribute("user", user);
         model.addAttribute("role", roleService.allRoles());
-        return "user-info";
+        return "redirect:/";
     }
 
     @PostMapping("/new")
     public String newUser(@ModelAttribute User user, @RequestParam("roles") String[] role) {
         user.setRoles(roleService.getRoleSet(role));
         userService.save(user);
-        return "redirect:/admin";
+        return "redirect:/";
     }
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable("id") int id, Model model) {
         model.addAttribute("user", userService.getById(id));
         model.addAttribute("role", roleService.allRoles());
-        return "edit-user";
+        return "redirect:/";
     }
 
     @PostMapping("/edit/{id}")
     public String editUser(@ModelAttribute User user, @RequestParam("roles") String[] role) {
         user.setRoles(roleService.getRoleSet(role));
         userService.update(user);
-        return "redirect:/admin";
+        return "redirect:/";
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteUser(@PathVariable("id") int id) {
         userService.delete(id);
-        return "redirect:/admin";
+        return "redirect:/";
     }
 
 }
