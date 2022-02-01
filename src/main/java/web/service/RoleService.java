@@ -2,8 +2,8 @@ package web.service;
 
 import web.model.Role;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public interface RoleService {
     List<Role> allRoles();
@@ -16,6 +16,6 @@ public interface RoleService {
 
     Role getByName(String roleName);
 
-    public HashSet getRoleSet(String[] role);
+    public Set<Role> getRoleSet(String[] role);
 
 }
