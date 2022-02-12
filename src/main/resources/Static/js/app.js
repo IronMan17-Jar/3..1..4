@@ -31,7 +31,8 @@ async function getTableWithUsers() {
                 let tableFilling = `$(
                         <tr>
                             <td>${user.id}</td>
-                            <td>${user.login}</td>
+                            <td>${user.name}</td>
+                            <td>${user.lastName}</td>
                             <td>${user.password.slice(0, 15)}...</td>
                             <td>${user.age}</td>     
                             <td>
@@ -125,7 +126,8 @@ async function editUser(modal, id) {
         let bodyForm = `
             <form class="form-group" id="editUser">
                 <input type="text" class="form-control" id="id" name="id" value="${user.id}" disabled><br>
-                <input class="form-control" type="text" id="login" value="${user.login}"><br>
+                <input class="form-control" type="text" id="name" value="${user.name}"><br>
+                <input class="form-control" type="text" id="lastName" value="${user.lastName}"><br>
                 <input class="form-control" type="password" id="password"><br>
                 <input class="form-control" id="age" type="number" value="${user.age}">
             </form>
@@ -135,12 +137,14 @@ async function editUser(modal, id) {
 
     $("#editButton").on('click', async () => {
         let id = modal.find("#id").val().trim();
-        let login = modal.find("#login").val().trim();
+        let name = modal.find("#name").val().trim();
+        let lastName = modal.find("#lastName").val().trim();
         let password = modal.find("#password").val().trim();
         let age = modal.find("#age").val().trim();
         let data = {
             id: id,
-            login: login,
+            name: name,
+            lastName: lastName,
             password: password,
             age: age
         }
@@ -181,18 +185,21 @@ async function deleteUser(modal, id) {
 async function addNewUser() {
     $('#addNewUserButton').click(async () =>  {
         let addUserForm = $('#defaultSomeForm')
-        let login = addUserForm.find('#AddNewUserLogin').val().trim();
+        let name = addUserForm.find('#AddNewUserName').val().trim();
+        let lastName = addUserForm.find('#AddNewUserLastName').val().trim();
         let password = addUserForm.find('#AddNewUserPassword').val().trim();
         let age = addUserForm.find('#AddNewUserAge').val().trim();
         let data = {
-            login: login,
+            name: name,
+            lastName: lastName,
             password: password,
             age: age
         }
         const response = await userFetchService.addNewUser(data);
         if (response.ok) {
             getTableWithUsers();
-            addUserForm.find('#AddNewUserLogin').val('');
+            addUserForm.find('#AddNewUserName').val('');
+            addUserForm.find('#AddNewUserLastName').val('');
             addUserForm.find('#AddNewUserPassword').val('');
             addUserForm.find('#AddNewUserAge').val('');
         } else {
