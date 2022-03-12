@@ -24,9 +24,8 @@ public class AdminRestController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> allUsers() {
-        List<User> users = userService.allUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public List<User> allUsers() {
+        return userService.allUsers();
     }
 
     @GetMapping("/users/{id}")
@@ -41,16 +40,14 @@ public class AdminRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<User> editUser(@PathVariable("id") int id, @RequestBody User user) {
-        userService.update(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PatchMapping("/users/{id}")
+    public User editUser(@PathVariable("id") int id, @RequestBody User user) {
+        return userService.update(user);
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable("id") int id) {
-        userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public void deleteUser(@PathVariable("id") int id) {
+         userService.delete(id);
     }
 
 }
