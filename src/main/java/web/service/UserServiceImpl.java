@@ -32,9 +32,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void save(User user) {
+    public User save(User user) {
         user.setPassword(getPasswordEncoder().encode(user.getPassword()));
         userDAO.save(user);
+        return user;
     }
 
     @Transactional

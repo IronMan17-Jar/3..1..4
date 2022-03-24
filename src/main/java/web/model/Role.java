@@ -12,7 +12,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "role")
+    @Column(name = "role", insertable=false, updatable=false)
     private String role;
 
     @Transient

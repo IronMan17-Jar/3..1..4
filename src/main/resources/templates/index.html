@@ -9,12 +9,12 @@
 </head>
 <body>
 <nav class="navbar navbar-dark bg-dark">
-<!--    <span>-->
-<!--        <span class="navbar-brand font-weight-bold" th:text="${user.name}"></span>-->
-<!--        <span class="navbar-brand" th:text="' with roles:'"></span>-->
-<!--        <span class="navbar-brand" th:each="rol : ${user.getRoles()}"-->
-<!--              th:text="${rol.getRole()} + ' '"></span>-->
-<!--    </span>-->
+    <span>
+        <span class="navbar-brand font-weight-bold" th:text="${user.name}"></span>
+        <span class="navbar-brand" th:text="' with roles:'"></span>
+        <span class="navbar-brand" th:each="role : ${user.getRoles()}"
+              th:text="${role.getRole()} + ' '"></span>
+    </span>
     <ul class="nav navbar-nav navbar-right">
         <li class="nav-item">
             <a class="nav-link" href="/logout">Logout</a>
@@ -58,7 +58,7 @@
                             <th scope="col">Delete</th>
                         </tr>
                         </thead>
-                        <tbody id="tableAllUsers"></tbody>
+                        <tbody id="tableUsers"></tbody>
                     </table>
                 </div>
                 <div class="tab-pane bg-white" id="newUser" aria-labelledby="newUserActive">

@@ -1,8 +1,8 @@
-let userInfo = $('#tableAllUsers')
+let userInfo = $('#tableUsers')
 let getAllUser = []
-const allRoles = ['USER', 'ADMIN']
 
 getUsers()
+
 function getUsers() {
     fetch("/api/users").then((response) => {
         response.json().then((users) => {
@@ -13,17 +13,15 @@ function getUsers() {
         });
     });
 }
+
 function addUserForTable(user) {
-    let innerDepth = ''
     userInfo.append(
         '<tr>' +
         '<td>' + user.id + '</td>' +
         '<td>' + user.name + '</td>' +
         '<td>' + user.lastName + '</td>' +
         '<td>' + user.age + '</td>' +
-        //'<td>' + user.roles.map(roleUser => roleUser.role) + '</td>' +
-        '<td>' + user.roles.forEach(role => {
-            innerDepth += (role.role === 'ROLE_USER' ? 'USER' : 'ADMIN')}) + '</td>' +
+        '<td>' + user.roles.map(roleUser => roleUser.role) + '</td>' +
         '<td>' +
         '<button onclick="editUserById(' + user.id + ')" class="btn btn-info edit-btn" data-toggle="modal" data-target="#edit"' +
         '>Edit</button></td>' +
@@ -39,6 +37,7 @@ function createNewProfile() {
     let lastName = document.getElementById('newLastname').value;
     let age = document.getElementById('newAge').value;
     let password = document.getElementById('newPassword').value;
+    let roles = getRol(Array.from(document.getElementById('newRole').selectedOptions).map(role => role.value));
 
     fetch("api/users", {
         method: "POST",
@@ -50,7 +49,8 @@ function createNewProfile() {
             name: name,
             lastName: lastName,
             age: age,
-            password: password
+            password: password,
+            roles: roles
         })
     })
         .then(() => {
@@ -61,16 +61,20 @@ function createNewProfile() {
 
 
 function deleteUserById(id) {
+
     fetch("api/users/" + id, {
         method: "GET",
-        dataType: 'json'})
+        dataType: 'json'
+    })
         .then(res => {
-            res.json().then(user =>{
+            res.json().then(user => {
                 $("#deleteId").val(user.id);
                 $("#deleteName").val(user.name);
                 $("#deleteLastname").val(user.lastName);
                 $("#deleteAge").val(user.age);
-                $("#deleteRole").val(user.role);
+                user.roles.map(role => {
+                    $("#deleteRole").append('<option>' + role.role + '</option>')
+                })
             })
         })
 }
@@ -79,24 +83,13 @@ function deleteItem() {
     fetch("api/users/" + ($("#deleteId").val()), {
         method: "DELETE",
     })
-        //.then(response => response.json())
         .then(() => {
             location.reload();
             closeForm();
             userInfo().empty();
             getUsers();
         })
-
-
 }
-
-// function _displayCount(itemCount) {
-//     const name = (itemCount === 1) ? 'to-do' : 'to-dos';
-//
-//     document.getElementById('counter').innerText = `${itemCount} ${name}`;
-// }
-
-
 
 function closeForm() {
     $("#edit .close").click();
@@ -106,27 +99,13 @@ function closeForm() {
     $('#deleteRole > option').remove();
 }
 
-
-
-async function showAllEditRoles() {
-    const allRoles = await getRoles();
-    allRoles.forEach(items => {
-        let role = items.role;
-        let selectElem = document.getElementById('editRoles');
-        let element = document.createElement('option');
-        element.innerText = role;
-        selectElem.append(element);
-    })}
-// /*
-// в модалке айди выставляешь соответственно. потом просто вызываешь функцию, она подтянет роли
-//  */
-
 function editUserById(id) {
     fetch("api/users/" + id, {
         method: "GET",
-        dataType: 'json'})
+        dataType: 'json'
+    })
         .then(res => {
-            res.json().then(user =>{
+            res.json().then(user => {
                 $("#editId").val(user.id);
                 $("#editName").val(user.name);
                 $("#editLastname").val(user.lastName);
@@ -142,6 +121,7 @@ function updateItem() {
     let lastName = document.getElementById('editLastname').value;
     let age = document.getElementById('editAge').value;
     let password = document.getElementById('editPassword').value;
+    let roles = getRol(Array.from(document.getElementById('editRole').selectedOptions).map(role => role.value));
 
     fetch("api/users/" + id, {
         method: "PATCH",
@@ -154,7 +134,8 @@ function updateItem() {
             name: name,
             lastName: lastName,
             age: age,
-            password: password
+            password: password,
+            roles: roles
         })
     })
         .then(() => {
@@ -163,3 +144,18 @@ function updateItem() {
             closeForm();
         })
 }
+
+function getRol(list) {
+    let roles = [];
+    if (list.indexOf("ADMIN") >= 0) {
+        roles.push({"id": 1});
+    }
+    if (list.indexOf("USER") >= 0) {
+        roles.push({"id": 2});
+    }
+    return roles;
+}
+
+
+
+

@@ -1,11 +1,8 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
-import web.service.RoleService;
 import web.service.UserService;
 
 import java.util.List;
@@ -15,12 +12,10 @@ import java.util.List;
 public class AdminRestController {
 
     private final UserService userService;
-    private final RoleService roleService;
 
     @Autowired
-    public AdminRestController(UserService userService, RoleService roleService) {
+    public AdminRestController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
 
     @GetMapping("/users")
@@ -29,15 +24,13 @@ public class AdminRestController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getOneUser(@PathVariable("id") int id) {
-        User user = userService.getById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    public User getOneUser(@PathVariable("id") int id) {
+        return userService.getById(id);
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> newUser(@RequestBody User user) {
-        userService.save(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public User newUser(@RequestBody User user) {
+        return userService.save(user);
     }
 
     @PatchMapping("/users/{id}")
@@ -47,7 +40,7 @@ public class AdminRestController {
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable("id") int id) {
-         userService.delete(id);
+        userService.delete(id);
     }
 
 }
