@@ -1,5 +1,6 @@
 let userInfo = $('#tableUsers')
 let getAllUser = []
+const xhr = new XMLHttpRequest();
 
 getUsers()
 
@@ -32,12 +33,9 @@ function addUserForTable(user) {
     )
 }
 
-function createNewProfile() {
-    let name = document.getElementById('newName').value;
-    let lastName = document.getElementById('newLastname').value;
-    let age = document.getElementById('newAge').value;
-    let password = document.getElementById('newPassword').value;
-    let roles = getRol(Array.from(document.getElementById('newRole').selectedOptions).map(role => role.value));
+const addUserForm = document.querySelector('.add-user-form')
+addUserForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
     fetch("api/users", {
         method: "POST",
@@ -46,18 +44,24 @@ function createNewProfile() {
             'Accept': 'application/json'
         },
         body: JSON.stringify({
-            name: name,
-            lastName: lastName,
-            age: age,
-            password: password,
-            roles: roles
+            name: document.getElementById('newName').value,
+            lastName: document.getElementById('newLastname').value,
+            age: document.getElementById('newAge').value,
+            password: document.getElementById('newPassword').value,
+            roles: getRol(Array.from(document.getElementById('newRole').selectedOptions).map(role => role.value))
         })
     })
         .then(() => {
+            document.getElementById('newName').value = ''
+            document.getElementById('newLastname').value = ''
+            document.getElementById('newAge').value = ''
+            document.getElementById('newPassword').value = ''
+            document.getElementById('newRole').value = ''
             getUsers();
             document.getElementById("newUserForm").reset();
+            document.location.replace('/admin')
         })
-}
+})
 
 
 function deleteUserById(id) {
@@ -155,7 +159,4 @@ function getRol(list) {
     }
     return roles;
 }
-
-
-
 
